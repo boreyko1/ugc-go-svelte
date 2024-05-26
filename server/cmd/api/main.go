@@ -1,8 +1,8 @@
 package main
 
 import (
-	"aws-ugc-go-svelte/server/internal/data"
 	"log/slog"
+	"ugc-go-svelte/server/internal/data"
 )
 
 type config struct {
@@ -15,5 +15,4 @@ type app struct {
 }
 
 func main() {
-
 }

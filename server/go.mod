@@ -1,4 +1,4 @@
-module aws-ugc-go-svelte/server
+module ugc-go-svelte/server
 
 go 1.22.1
 

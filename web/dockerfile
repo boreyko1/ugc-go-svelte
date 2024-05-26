@@ -1,0 +1,11 @@
+FROM node:22 AS base
+
+FROM base AS dev
+
+WORKDIR /web
+
+COPY --link package.json package-lock.json ./
+
+RUN npm install
+
+COPY --link . .

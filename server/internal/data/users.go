@@ -1,10 +1,10 @@
 package data
 
 import (
-	"aws-ugc-go-svelte/server/internal/validator"
 	"database/sql"
 	"errors"
 	"time"
+	"ugc-go-svelte/server/internal/validator"
 
 	"golang.org/x/crypto/bcrypt"
 )

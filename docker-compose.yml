@@ -1,0 +1,66 @@
+services:
+  db:
+    image: postgres
+    restart: always
+    shm_size: 128mb
+    environment:
+      POSTGRES_DB: ugc
+      POSTGRES_PASSWORD: password
+    volumes:
+      - db:/var/lib/postgresql/data
+    ports:
+      - 5434:5432
+
+  migrate: &basemigrate
+    profiles:
+      - tools
+    image: migrate/migrate
+    entrypoint: migrate -database postgresql://postgres:password@db/ugc?sslmode=disable -path /tmp/migrations
+    depends_on:
+      - db
+    volumes:
+      - ./server/migrations:/tmp/migrations
+
+  create_migration:
+    <<: *basemigrate
+    entrypoint: migrate create -dir /tmp/migrations -ext sql -seq
+    command: ''
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+
+  server:
+    build:
+      dockerfile: dockerfile
+      context: ./server
+      target: dev
+    volumes:
+      - ./server:/server
+    depends_on:
+      - db
+
+  web:
+    build:
+      dockerfile: dockerfile
+      context: ./web
+      target: dev
+    command: npm run dev
+    ports:
+      - 5173:5173
+    depends_on:
+      - server
+    develop:
+      watch:
+        - path: web/package.json
+          action: rebuild
+        - path: web/package-lock.json
+          action: rebuild
+        - path: web/
+          target: /web
+          action: sync
+
+volumes:
+  db:
